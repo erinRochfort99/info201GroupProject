@@ -1,0 +1,12 @@
+name: timeline_app
+title: timeline_app
+username:
+account: erika-s
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 600758
+bundleId: 1735364
+url: https://erika-s.shinyapps.io/timeline_app/
+when: 1543808374.47711
+asMultiple: FALSE
+asStatic: FALSE
