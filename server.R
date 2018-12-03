@@ -35,7 +35,8 @@ my_server <- function(input, output)({
   
   output$scatter <- renderPlot({
     ggplot(sum) +
-      geom_point(aes(x = TeamSize, y = totalMedals))
+      geom_point(aes(x = TeamSize, y = totalMedals))+
+      labs(title = "Team Size vs. Medal Count")
     
   })
   
