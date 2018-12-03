@@ -3,7 +3,13 @@ library("shiny")
 my_ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
-      uiOutput("medalChoice")
+      radioButtons("medalChoices", "Choose what medals to display", 
+                   choices = list(
+                     "Gold" ="Gold", 
+                     "Silver" = "Silver", 
+                     "Bronze" = "Bronze", 
+                     "All" = "All"
+                   ))
     ),
     mainPanel(
       plotOutput("scatter"),
