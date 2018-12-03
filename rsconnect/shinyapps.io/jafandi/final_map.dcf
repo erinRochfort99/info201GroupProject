@@ -1,0 +1,12 @@
+name: final_map
+title: final_map
+username:
+account: jafandi
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 600927
+bundleId: 1735787
+url: https://jafandi.shinyapps.io/final_map/
+when: 1543824425.24669
+asMultiple: FALSE
+asStatic: FALSE
