@@ -6,7 +6,7 @@ my_ui <- fluidPage(
       uiOutput("medalChoice")
     ),
     mainPanel(
-      #plotOutput("scatter")
+      plotOutput("scatter"),
       textOutput("pract")
     )
   )
