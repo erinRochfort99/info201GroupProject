@@ -1,6 +1,7 @@
 library(shiny)
 library(ggplot2)
 library(dplyr)
+source("data/calculation.R")
 original_data <- read.csv("data/athlete_events.csv", stringsAsFactors = FALSE)
 distinct_game <- distinct(original_data, Games)
 distinct_game_order <- arrange(distinct_game, Games)
@@ -15,17 +16,18 @@ shinyUI(fluidPage(
   # Sidebar with a slider input for number of bins 
   sidebarLayout(
     sidebarPanel(
-       selectInput("game",
-                   "Choose a specific game",
-                   choices = distinct_game_order),
-       checkboxGroupInput("medal", "Choose types of medal",
-                          choices = medal_type, selected = medal_type)
+      selectInput("game",
+                  "Choose a specific game",
+                  choices = distinct_game_order, selected = "2016 Summer"),
+      checkboxGroupInput("medal", "Choose types of medal",
+                         choices = medal_type, selected = medal_type)
     ),
     
     
     # Show a plot of the generated distribution
     mainPanel(
-      plotOutput("distPlot", width = 600, height = 600)
+      plotOutput("distPlot", width = 600, height = 600),
+      textOutput("text")
     )
   )
 ))
