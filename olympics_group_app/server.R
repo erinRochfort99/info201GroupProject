@@ -65,7 +65,7 @@ shinyServer(function(input, output) {
     country_filter <- filter(final_counts, name.y == input$country_input)
     total <- sum(country_filter$count)
     
-    paste(input$country_input, "has won a total medal count of ", total, "medals")
+    paste(input$country_input, "has won a total medal count of ", total, "medals.")
   })
   # Erin's
   events <- select(olympics_df, Team, NOC, Medal)
@@ -85,9 +85,23 @@ shinyServer(function(input, output) {
       specific_color <- "green3"
     }
     ggplot(used_data, aes(x = TeamSize, y = medal)) +
-      geom_point(color = specific_color, size = 4)+
-      geom_smooth(method = lm, se = FALSE, color = "black")+
-      labs(title = paste("Team Size vs.", input$medalChoices, " Medal Count"))
+      geom_point(color = specific_color, size = 4) +
+      geom_smooth(method = lm, se = FALSE, color = "black") +
+      labs(title = paste0("Team Size vs. ", input$medalChoices, " Medal Count"))
+  })
+  
+  output$nationGroupData <- renderText(
+    paste0(input$nation_group, " has a team size of ",
+           team_count[which(team_count$Team == input$nation_group),]$TeamSize,
+           " and has ", get_value(input$medalChoices, input$nation_group),
+           " ", name_medal(input$medalChoices), " medals.")
+  )
+  
+  output$click_info <- renderPrint({
+    used_data <- count_medal(events, input$medalChoices)
+    used_data <- left_join(team_count, used_data, by = "Team")
+    used_data[is.na(used_data)] <- 0
+    nearPoints(used_data, input$plot1_click)
   })
   
   output$pract <- renderText({
@@ -102,7 +116,7 @@ shinyServer(function(input, output) {
     pie_info <- data.frame(group = c("Male", "Female"), value = data_table$value)
     ggplot(pie_info, aes(x = " ", y = data_table$value, fill = group)) +
       geom_bar(width = 1, stat = "identity") + scale_fill_manual(values=c("#FFC0CB", "#89CFF0")) +
-      labs(x = "", y = "", title = "Sex Distribution of Medals by Game", fill = "Sex") +
+      labs(x = "", y = "", title = paste("Sex Distribution of Medals by Game", "(Chart 1)", sep = "\n"), fill = "Sex") +
       theme(plot.title = element_text(size=20, face="bold")) +
       coord_polar("y", start=0) + geom_text(aes(x = 1.3, y = midpoint, label = data_table$lbls), size = 7)
   })
@@ -113,7 +127,7 @@ shinyServer(function(input, output) {
     pie_info <- data.frame(group = c("Male", "Female"), value = data_table$value)
     ggplot(pie_info, aes(x = " ", y = data_table$value, fill = group)) +
       geom_bar(width = 1, stat = "identity") + scale_fill_manual(values=c("#FFC0CB", "#89CFF0")) +
-      labs(x = "", y = "", title = "Sex Distribution of Medals by Group", fill = "Sex") +
+      labs(x = "", y = "", title = paste("Sex Distribution of Medals by Nation", "(Chart 2)", sep = "\n"), fill = "Sex") +
       theme(plot.title = element_text(size=20, face="bold")) +
       coord_polar("y", start=0) + geom_text(aes(x = 1.3, y = midpoint, label = data_table$lbls), size = 7)
   })

@@ -14,6 +14,7 @@ source("data/map_data.R")
 source("data/calculation.R")
 source("data/calculation2.R")
 source("data/scatterPlot.R")
+source("data/scatterPlotTextHelper.R")
 
 distinct_game <- distinct(olympics_df, Games)
 distinct_game_order <- arrange(distinct_game, Games)
@@ -87,10 +88,28 @@ shinyUI(fluidPage(
                          "Silver" = "Silver", 
                          "Bronze" = "Bronze", 
                          "All" = "All"
-                       ))
+                       )),
+          selectInput("nation_group", h3("Nation/Group:"),
+                      c(nation_data_edit),
+                      selected = "nation_group"),
+          tableOutput(
+            "nationGroupData"
+          )
         ),
         mainPanel(
-          plotOutput("scatter"),
+          fluidRow(
+            column(width = 4,
+                   plotOutput("scatter", height = 350, width = 800,
+                              click = "plot1_click"
+                   )
+            )
+          ),
+          fluidRow(
+            column(width = 10,
+                   h4("Information for Chosen Point:"),
+                   verbatimTextOutput("click_info")
+            )
+          ),
           textOutput("pract")
         )
       )
@@ -99,11 +118,11 @@ shinyUI(fluidPage(
     tabPanel("Pie Chart", fluid = TRUE,
              sidebarLayout(
                sidebarPanel(
-                 selectInput("game", h3("Olympic Games"),
+                 selectInput("game", h4("Gender Distribution of Medals by Game and Medal Type (Chart 1):"),
                              choices = distinct_game_order, selected = "2016 Summer"),
-                 checkboxGroupInput("medal", "Choose types of medal",
+                 checkboxGroupInput("medal", "Choose which types of medal:",
                                     choices = medal_type, selected = medal_type),
-                 selectInput("group", h3("Nation/Group:"),
+                 selectInput("group", h4("Gender Distribution of Medals by Nation/Group (Chart 2):"),
                              c(nation_data_edit),
                              selected = "group")
                ),

@@ -5,8 +5,8 @@ account: erika-s
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 602374
-bundleId: 1738617
+bundleId: 1740251
 url: https://erika-s.shinyapps.io/olympics_group_app/
-when: 1543910705.75782
+when: 1543954231.65752
 asMultiple: FALSE
 asStatic: FALSE
