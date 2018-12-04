@@ -4,23 +4,37 @@
 events <- read.csv("data/athlete_events.csv")
 events <- select(events, Team, NOC, Medal)
 
-ha <- filter(events, Medal != "NA")
+regions_df <- read.csv("data/noc_regions.csv", stringsAsFactors = FALSE) %>%
+  select(NOC, region)
 
-team_count  <- events %>%
-  count(Team)
-colnames(team_count)[2] <- "TeamSize"
+combined_region_NOC <- full_join(events, regions_df, by = "NOC") %>%
+  slice(c(-61081, -130722, -271117))
+
+count <- 0
+for (region in combined_region_NOC$region) {
+  count <- count + 1
+  if(is.na(region)) {
+    combined_region_NOC[count, ]$region <- combined_region_NOC[count, ]$Team
+  }
+}
+
+ha <- filter(combined_region_NOC, Medal != "NA")
+
+team_count  <- combined_region_NOC %>%
+  count(region)
+colnames(team_count)[2] <- "Team_Size"
 
 count_medal <- function(data, medal){
   if(medal == "All"){
-    data <- events %>%
+    data <- combined_region_NOC %>%
       filter(Medal != "NA") %>%
-      count(Team) 
+      count(region) 
   }else{
-    data <- events %>%
+    data <- combined_region_NOC %>%
       filter(Medal == medal) %>%
-      count(Team)
+      count(region)
   }
-  colnames(data)[2] <- "medal"
+  colnames(data)[2] <- "Medal_Count"
   return(data)
 }
 

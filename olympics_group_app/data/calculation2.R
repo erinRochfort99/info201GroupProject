@@ -4,8 +4,23 @@ fixData2 <- function(dataf, input){
   
   dataf[is.na(dataf)] <- "Not applied"
 
-  useful_data <- select(dataf, Sex, Team, Games)
-  region_data <- filter(useful_data, Team == input$group)
+  useful_data <- select(dataf, Sex, Team, Games, NOC)
+  
+  regions_df <- read.csv("data/noc_regions.csv", stringsAsFactors = FALSE) %>%
+    select(NOC, region)
+  
+  combined_region_NOC <- full_join(useful_data, regions_df, by = "NOC") %>%
+    slice(c(-61081, -130722, -271117))
+  
+  count <- 0
+  for (region in combined_region_NOC$region) {
+    count <- count + 1
+    if(is.na(region)) {
+      combined_region_NOC[count, ]$region <- combined_region_NOC[count, ]$Team
+    }
+  }
+  
+  region_data <- filter(combined_region_NOC, region == input$group)
 
   rm(dataf, useful_data)
   gold_f <- filter(region_data, Sex == "F")

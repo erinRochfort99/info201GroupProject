@@ -1,7 +1,6 @@
 get_value <- function(medal_type, group) {
   df <- count_medal(events, medal_type)
-  #df[is.na(df)] <- 0
-  val <- df[which(df$Team == group),]$medal
+  val <- df[which(df$region == group),]$Medal_Count
   if (length(val) == 0) {
     val <- 0
   }

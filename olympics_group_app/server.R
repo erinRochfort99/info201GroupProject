@@ -28,6 +28,15 @@ shinyServer(function(input, output) {
     paste0(input$nation, " first entered the Olympics for the ",
            timeline_data[which(timeline_data$region == input$nation), ]$Games[1], " Olympic Games.")
     )
+  output$timeline_analysis <- renderText({
+    paste0("This timeline depicts the year and season that different nations/groups entered the Olympics ",
+           "for the first time. Most countries seem to enter in the summer, however, a majority of the ",
+           "countries that join in the winter season are Slavic countries or countries that are known for ",
+           "their winter sports. It's worth pointing out that after the Berlin wall fell in 1991, many ",
+           "countries in that region joined the Olympics for the first time for the Winter 1992 and ",
+           "Winter 1994 Olympics. This could be due to the freedom that these countries recieved after ",
+           "that significant event.")
+  })
   
   # Jocelyn's
   output$medal_input <- renderPrint({input$medal_input})
@@ -67,12 +76,16 @@ shinyServer(function(input, output) {
     
     paste(input$country_input, "has won a total medal count of ", total, "medals.")
   })
+  
+  output$map_analysis <- renderText({
+    paste0("")
+  })
   # Erin's
   events <- select(olympics_df, Team, NOC, Medal)
   
   output$scatter <- renderPlot({
     used_data <- count_medal(events, input$medalChoices)
-    used_data <- left_join(team_count, used_data, by = "Team")
+    used_data <- left_join(team_count, used_data, by = "region")
     used_data[is.na(used_data)] <- 0
     specific_color <- ""
     if (input$medalChoices == "Gold") {
@@ -84,29 +97,34 @@ shinyServer(function(input, output) {
     } else {
       specific_color <- "green3"
     }
-    ggplot(used_data, aes(x = TeamSize, y = medal)) +
+    ggplot(used_data, aes(x = Team_Size, y = Medal_Count)) +
       geom_point(color = specific_color, size = 4) +
       geom_smooth(method = lm, se = FALSE, color = "black") +
-      labs(title = paste0("Team Size vs. ", input$medalChoices, " Medal Count"))
+      labs(title = paste0("Team Size vs. ", input$medalChoices, " Medal Count (select a point)")) +
+      xlab("Medal Count") + ylab("Team Size")
   })
   
   output$nationGroupData <- renderText(
     paste0(input$nation_group, " has a team size of ",
-           team_count[which(team_count$Team == input$nation_group),]$TeamSize,
-           " and has ", get_value(input$medalChoices, input$nation_group),
+           team_count[which(team_count$region == input$nation_group),]$Team_Size,
+           " people and has ", get_value(input$medalChoices, input$nation_group),
            " ", name_medal(input$medalChoices), " medals.")
   )
   
   output$click_info <- renderPrint({
     used_data <- count_medal(events, input$medalChoices)
-    used_data <- left_join(team_count, used_data, by = "Team")
+    used_data <- left_join(team_count, used_data, by = "region")
     used_data[is.na(used_data)] <- 0
     nearPoints(used_data, input$plot1_click)
   })
   
   output$pract <- renderText({
-    paste("The scatter plot above utilizes ", input$medalChoices, " medal counts to display the relationship
-          between Olympic Team Size and the number of medals they are awarded.")
+    paste("This scatter plot depicts the data for", tolower(input$medalChoices),
+          "medal counts per group/nation, which is then used to display the relationship between",
+          "Olympic team size of a group/nation and the number of medals that they have.",
+          "From this data it can be concluded that the relationship between the size of",
+          "an Olympic team and the number of medals they have is a positive relationship, as",
+          "shown by the line of best fit in the graph.")
   })
   
   # Jenny's
@@ -116,7 +134,8 @@ shinyServer(function(input, output) {
     pie_info <- data.frame(group = c("Male", "Female"), value = data_table$value)
     ggplot(pie_info, aes(x = " ", y = data_table$value, fill = group)) +
       geom_bar(width = 1, stat = "identity") + scale_fill_manual(values=c("#FFC0CB", "#89CFF0")) +
-      labs(x = "", y = "", title = paste("Sex Distribution of Medals by Game", "(Chart 1)", sep = "\n"), fill = "Sex") +
+      labs(x = "", y = "", title = paste("Sex Distribution of Medals for the", paste(input$game, "Olympic Games"),
+                                         "(Chart 1)", sep = "\n"), fill = "Sex") +
       theme(plot.title = element_text(size=20, face="bold")) +
       coord_polar("y", start=0) + geom_text(aes(x = 1.3, y = midpoint, label = data_table$lbls), size = 7)
   })
@@ -127,7 +146,8 @@ shinyServer(function(input, output) {
     pie_info <- data.frame(group = c("Male", "Female"), value = data_table$value)
     ggplot(pie_info, aes(x = " ", y = data_table$value, fill = group)) +
       geom_bar(width = 1, stat = "identity") + scale_fill_manual(values=c("#FFC0CB", "#89CFF0")) +
-      labs(x = "", y = "", title = paste("Sex Distribution of Medals by Nation", "(Chart 2)", sep = "\n"), fill = "Sex") +
+      labs(x = "", y = "", title = paste("Sex Distribution of Medals for", input$group, "(Chart 2)", sep = "\n"),
+           fill = "Sex") +
       theme(plot.title = element_text(size=20, face="bold")) +
       coord_polar("y", start=0) + geom_text(aes(x = 1.3, y = midpoint, label = data_table$lbls), size = 7)
   })
@@ -140,6 +160,8 @@ shinyServer(function(input, output) {
            input$group, " has a gender distribution of medals consisting of ", data_info$percent_f, 
            "% females and ", data_info$percent_m, "% males.",
            " From this data it can be inferred that there are more male events than female events",
-           " in the Olympics, but that the amount of female events has been increasing since the Summer 1900 games.")
+           " in the Olympics, but that the amount of female events has been increasing since the Summer 1900 games.",
+           "It's also interesting to observe the differences in gender distribution of Olympic medals between",
+           "specific groups/nations.")
   })
 })

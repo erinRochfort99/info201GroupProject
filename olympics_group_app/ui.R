@@ -23,8 +23,6 @@ medal_type <- c("Gold", "Bronze", "Silver")
 timeline_data <- get_timeline_data(olympics_df)
 
 nation_data_edit <- timeline_data$region
-nation_data_edit[nation_data_edit == "USA"] <- "United States"
-nation_data_edit[nation_data_edit == "UK"] <- "Great Britain"
 
 shinyUI(fluidPage(
   
@@ -46,7 +44,8 @@ shinyUI(fluidPage(
           )
         ),
         mainPanel(
-          plotlyOutput("timelinePlot")
+          plotlyOutput("timelinePlot"),
+          textOutput("timeline_analysis")
         )
       )
     ),
@@ -74,7 +73,8 @@ shinyUI(fluidPage(
           tableOutput("country_output")
         ),
         mainPanel(
-          plotlyOutput("mapPlot")
+          plotlyOutput("mapPlot"),
+          textOutput("map_analysis")
         )
       )
     ),
