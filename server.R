@@ -17,7 +17,7 @@ my_server <- function(input, output)({
     ggplot(used_data, aes(x = TeamSize, y = medal)) +
       geom_point()+
       geom_smooth(method = lm, se = FALSE)+
-      labs(title = "Team Size vs. Medal Count")
+      labs(title = paste("Team Size vs. ", input$medalChoices, " Medal Count"))
 
   })
 
