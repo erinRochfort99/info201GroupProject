@@ -74,11 +74,20 @@ shinyServer(function(input, output) {
     used_data <- count_medal(events, input$medalChoices)
     used_data <- left_join(team_count, used_data, by = "Team")
     used_data[is.na(used_data)] <- 0
+    specific_color <- ""
+    if (input$medalChoices == "Gold") {
+      specific_color <- "blue"
+    } else if (input$medalChoices == "Silver") {
+      specific_color <- "red"
+    } else if (input$medalChoices == "Bronze"){
+      specific_color <- "gold2"
+    } else {
+      specific_color <- "green3"
+    }
     ggplot(used_data, aes(x = TeamSize, y = medal)) +
-      geom_point()+
-      geom_smooth(method = lm, se = FALSE)+
+      geom_point(color = specific_color, size = 4)+
+      geom_smooth(method = lm, se = FALSE, color = "black")+
       labs(title = paste("Team Size vs.", input$medalChoices, " Medal Count"))
-    
   })
   
   output$pract <- renderText({
@@ -88,24 +97,35 @@ shinyServer(function(input, output) {
   
   # Jenny's
   output$distPlot <- renderPlot({
-    #filter data and calculate the data
     data_table <- fixData(olympics_df, input)
-    #make the plot
     midpoint <- cumsum(data_table$value) - data_table$value / 2
     pie_info <- data.frame(group = c("Male", "Female"), value = data_table$value)
     ggplot(pie_info, aes(x = " ", y = data_table$value, fill = group)) +
       geom_bar(width = 1, stat = "identity") + scale_fill_manual(values=c("#FFC0CB", "#89CFF0")) +
-      labs(x = "", y = "", title = "Sex Distribution of Medals", fill = "Sex") +
+      labs(x = "", y = "", title = "Sex Distribution of Medals by Game", fill = "Sex") +
       theme(plot.title = element_text(size=20, face="bold")) +
       coord_polar("y", start=0) + geom_text(aes(x = 1.3, y = midpoint, label = data_table$lbls), size = 7)
   })
+  
+  output$distPlot2 <- renderPlot({
+    data_table <- fixData2(olympics_df, input)
+    midpoint <- cumsum(data_table$value) - data_table$value / 2
+    pie_info <- data.frame(group = c("Male", "Female"), value = data_table$value)
+    ggplot(pie_info, aes(x = " ", y = data_table$value, fill = group)) +
+      geom_bar(width = 1, stat = "identity") + scale_fill_manual(values=c("#FFC0CB", "#89CFF0")) +
+      labs(x = "", y = "", title = "Sex Distribution of Medals by Group", fill = "Sex") +
+      theme(plot.title = element_text(size=20, face="bold")) +
+      coord_polar("y", start=0) + geom_text(aes(x = 1.3, y = midpoint, label = data_table$lbls), size = 7)
+  })
+  
   output$text <- renderText({
-    data_info <- fixData(olympics_df, input)
-    View(data_info)
-      #slice(1)
-    paste0("According to the data, female athletes won ", data_info$num_f,
-           " medals, whereas male athletes won ", data_info$num_m,
-           " medals overall. From this data it can be inferred that there are more male events than female events",
-           " in the Olympics, but also that the amount of female events has been increasing since the Summer 1900 games.")
+    data_info <- fixData(olympics_df, input) %>%
+    slice(1)
+    paste0("According to the data for the ", input$game," Olympic games, female athletes won ", data_info$num_f, " ",
+           " medals, whereas male athletes won ", data_info$num_m, " medals overall. ",
+           input$group, " has a gender distribution of medals consisting of ", data_info$percent_f, 
+           "% females and ", data_info$percent_m, "% males.",
+           " From this data it can be inferred that there are more male events than female events",
+           " in the Olympics, but that the amount of female events has been increasing since the Summer 1900 games.")
   })
 })

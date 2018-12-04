@@ -1,5 +1,8 @@
+
 fixData <- function(dataf, input){
+  
   dataf[is.na(dataf)] <- "Not applied"
+  
   useful_data <- select(dataf, Sex, Year, Games, Season, Medal)
   goldmedals <- filter(useful_data, Medal == input$medal)
   data_with_date <- filter(goldmedals, Games == input$game)
