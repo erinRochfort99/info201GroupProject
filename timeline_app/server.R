@@ -67,6 +67,24 @@ shinyServer(function(input, output) {
     
     paste(input$country_input, "has won a total medal count of ", total, "medals")
   })
+  # Erin's
+  events <- select(olympics_df, Team, NOC, Medal)
+  
+  output$scatter <- renderPlot({
+    used_data <- count_medal(events, input$medalChoices)
+    used_data <- left_join(team_count, used_data, by = "Team")
+    used_data[is.na(used_data)] <- 0
+    ggplot(used_data, aes(x = TeamSize, y = medal)) +
+      geom_point()+
+      geom_smooth(method = lm, se = FALSE)+
+      labs(title = paste("Team Size vs.", input$medalChoices, " Medal Count"))
+    
+  })
+  
+  output$pract <- renderText({
+    paste("The scatter plot above utilizes ", input$medalChoices, " medal counts to display the relationship
+          between Olympic Team Size and the number of medals they are awarded.")
+  })
   
   # Jenny's
   output$distPlot <- renderPlot({
@@ -82,8 +100,9 @@ shinyServer(function(input, output) {
       coord_polar("y", start=0) + geom_text(aes(x = 1.3, y = midpoint, label = data_table$lbls), size = 7)
   })
   output$text <- renderText({
-    data_info <- fixData(olympics_df, input) %>%
-      slice(1)
+    data_info <- fixData(olympics_df, input)
+    View(data_info)
+      #slice(1)
     paste0("According to the data, female athletes won ", data_info$num_f,
            " medals, whereas male athletes won ", data_info$num_m,
            " medals overall. From this data it can be inferred that there are more male events than female events",

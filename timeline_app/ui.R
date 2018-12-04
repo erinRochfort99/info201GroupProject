@@ -12,6 +12,7 @@ olympics_df <- read.csv("data/athlete_events.csv", stringsAsFactors = FALSE)
 source("data/timeline.R")
 source("data/map_data.R")
 source("data/calculation.R")
+source("data/scatterPlot.R")
 
 distinct_game <- distinct(olympics_df, Games)
 distinct_game_order <- arrange(distinct_game, Games)
@@ -24,6 +25,7 @@ shinyUI(fluidPage(
   titlePanel("Olympics Data"),
   
   tabsetPanel(
+    # Erika
     tabPanel("Timeline", fluid = TRUE,
       sidebarLayout(
         sidebarPanel(
@@ -43,6 +45,7 @@ shinyUI(fluidPage(
         )
       )
     ),
+    # Jocelyn
     tabPanel("Map", fluid = TRUE,
       sidebarLayout(
         sidebarPanel(
@@ -70,6 +73,25 @@ shinyUI(fluidPage(
         )
       )
     ),
+    # Erin
+    tabPanel("Scatter Plot", fluid = TRUE,
+      sidebarLayout(
+        sidebarPanel(
+          radioButtons("medalChoices", "Choose what medals to display", 
+                       choices = list(
+                         "Gold" ="Gold", 
+                         "Silver" = "Silver", 
+                         "Bronze" = "Bronze", 
+                         "All" = "All"
+                       ))
+        ),
+        mainPanel(
+          plotOutput("scatter"),
+          textOutput("pract")
+        )
+      )
+    ),
+    # Jenny
     tabPanel("Pie Chart", fluid = TRUE,
              sidebarLayout(
                sidebarPanel(
