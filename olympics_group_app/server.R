@@ -161,7 +161,7 @@ shinyServer(function(input, output) {
            "% females and ", data_info$percent_m, "% males.",
            " From this data it can be inferred that there are more male events than female events",
            " in the Olympics, but that the amount of female events has been increasing since the Summer 1900 games.",
-           "It's also interesting to observe the differences in gender distribution of Olympic medals between",
+           "It's also interesting to observe the differences in gender distribution of Olympic medals between ",
            "specific groups/nations.")
   })
 })
