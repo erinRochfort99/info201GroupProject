@@ -9,6 +9,7 @@ library(countrycode)
 olympics_df <- read.csv("data/athlete_events.csv", stringsAsFactors = FALSE)
 
 shinyServer(function(input, output) {
+  # Erika's
   timeline_data <- get_timeline_data(olympics_df)
 
   filteredData <- reactive({
@@ -27,6 +28,8 @@ shinyServer(function(input, output) {
     paste0(input$nation, " first entered the Olympics for the ",
            timeline_data[which(timeline_data$region == input$nation), ]$Games[1], " Olympic Games.")
     )
+  
+  # Jocelyn's
   output$medal_input <- renderPrint({input$medal_input})
   
   output$mapPlot <- renderPlotly({
@@ -63,5 +66,27 @@ shinyServer(function(input, output) {
     total <- sum(country_filter$count)
     
     paste(input$country_input, "has won a total medal count of ", total, "medals")
+  })
+  
+  # Jenny's
+  output$distPlot <- renderPlot({
+    #filter data and calculate the data
+    data_table <- fixData(olympics_df, input)
+    #make the plot
+    midpoint <- cumsum(data_table$value) - data_table$value / 2
+    pie_info <- data.frame(group = c("Male", "Female"), value = data_table$value)
+    ggplot(pie_info, aes(x = " ", y = data_table$value, fill = group)) +
+      geom_bar(width = 1, stat = "identity") + scale_fill_manual(values=c("#FFC0CB", "#89CFF0")) +
+      labs(x = "", y = "", title = "Sex Distribution of Medals", fill = "Sex") +
+      theme(plot.title = element_text(size=20, face="bold")) +
+      coord_polar("y", start=0) + geom_text(aes(x = 1.3, y = midpoint, label = data_table$lbls), size = 7)
+  })
+  output$text <- renderText({
+    data_info <- fixData(olympics_df, input) %>%
+      slice(1)
+    paste0("According to the data, female athletes won ", data_info$num_f,
+           " medals, whereas male athletes won ", data_info$num_m,
+           " medals overall. From this data it can be inferred that there are more male events than female events",
+           " in the Olympics, but also that the amount of female events has been increasing since the Summer 1900 games.")
   })
 })

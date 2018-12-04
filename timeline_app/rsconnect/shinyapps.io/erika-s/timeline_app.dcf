@@ -5,8 +5,8 @@ account: erika-s
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 600758
-bundleId: 1737536
+bundleId: 1737766
 url: https://erika-s.shinyapps.io/timeline_app/
-when: 1543875401.73992
+when: 1543883027.17385
 asMultiple: FALSE
 asStatic: FALSE
