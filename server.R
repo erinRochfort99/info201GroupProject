@@ -2,9 +2,6 @@ library("shiny")
 library("dplyr")
 library("ggplot2")
 
-events <- read.csv("./data/athlete_events.csv")
-events <- select(events, Team, NOC, Medal)
-
 source("scatterPlot.R")
 
 ##########
