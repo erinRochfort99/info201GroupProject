@@ -7,32 +7,23 @@ library("ggplot2")
 events <- read.csv("./data/athlete_events.csv")
 events <- select(events, Team, NOC, Medal)
 
+ha <- filter(events, Medal != "NA")
+
 team_count  <- events %>%
   count(Team)
 colnames(team_count)[2] <- "TeamSize"
 
 count_medal <- function(data, medal){
-  data <- events %>%
-    filter(Medal == medal) %>%
-    count(Team) 
+  if(medal == "All"){
+    data <- events %>%
+      filter(Medal != "NA") %>%
+      count(Team) 
+  }else{
+    data <- events %>%
+      filter(Medal == medal) %>%
+      count(Team)
+  }
   colnames(data)[2] <- "medal"
   return(data)
 }
-
-
-#gold_count <- count_medal(events, "Gold")
-#silver_count <- count_medal(events, "Silver")
-#bronze_count <- count_medal(events, "Bronze")
-
-
-
-#sum <- left_join(team_count, gold_count, by = "Team")
-#sum <- left_join(sum, silver_count, by = "Team") 
-#sum <- left_join(sum, bronze_count, by = "Team")
-#sum[is.na(sum)] <- 0
-#sum$All = sum$Gold + sum$Silver + sum$Bronze
-
-
-#ggplot(sum) +
-#  geom_point(aes(x = TeamSize, y = All))
 
