@@ -34,7 +34,7 @@ shinyServer(function(input, output) {
            "countries that join in the winter season are Slavic countries or countries that are known for ",
            "their winter sports. It's worth pointing out that after the Berlin wall fell in 1991, many ",
            "countries in that region joined the Olympics for the first time for the Winter 1992 and ",
-           "Winter 1994 Olympics. This could be due to the freedom that these countries recieved after ",
+           "Winter 1994 Olympics. This could be due to the added freedom that these countries had after ",
            "that significant event.")
   })
   
@@ -151,7 +151,7 @@ shinyServer(function(input, output) {
           "From this data it can be concluded that the relationship between the size of",
           "an Olympic team and the number of medals they have is a positive relationship, as",
           "shown by the line of best fit in the graph. One country in particular stands out for 
-          having an very large team and very high number of medals won: USA. Given how big the team is,
+          having a very large team and very high number of medals won: USA. Given how big the team is,
           one could argue that the USA is not very effective in winning medals, but at the same time,
           the dispropotionately large team size may contribute to the large number of medals won.")
   })
