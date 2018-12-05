@@ -53,6 +53,11 @@ shinyUI(fluidPage(
     tabPanel("Map", fluid = TRUE,
       sidebarLayout(
         sidebarPanel(
+          helpText("Note: 2 countries are not represented in this map,
+                  Kosovo (a partially recognized state), and 
+                  Individual Olympic Athletes. There are 6 medals
+                  between them: 2 gold, 1 silver and 3 bronze."),
+          
           radioButtons(
                       "medal_input", 
                       label = h3("Medal Type:"), 
@@ -60,15 +65,17 @@ shinyUI(fluidPage(
                         "Silver" = "Silver", 
                         "Bronze" = "Bronze")),
       
-          helpText("Note: 2 countries are not represented in this map,
-                  Kosovo (a partially recognized state), and 
-                  Individual Olympic Athletes. There are 6 medals
-                  between them: 2 gold, 1 silver and 3 bronze."),
+          radioButtons(
+            "outlier_input", 
+            label = h4("Choose whether to include or exclude 3 outliers:
+                       (USA, Russia and Germany)"), 
+            choices = list("Include" = FALSE, 
+                           "Exclude" = TRUE)),
       
           selectInput(
                       "country_input",
                       label = h3("Country:"),
-                      choices = final_counts$name.y
+                      choices = country_codes$name
           ),
           tableOutput("country_output")
         ),
@@ -84,7 +91,7 @@ shinyUI(fluidPage(
         sidebarPanel(
           radioButtons("medalChoices", h3("Choose which medals to display:"), 
                        choices = list(
-                         "Gold" ="Gold", 
+                         "Gold" = "Gold", 
                          "Silver" = "Silver", 
                          "Bronze" = "Bronze", 
                          "All" = "All"
