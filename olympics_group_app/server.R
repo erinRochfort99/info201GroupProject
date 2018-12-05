@@ -153,12 +153,14 @@ shinyServer(function(input, output) {
   })
   
   output$text <- renderText({
-    data_info <- fixData(olympics_df, input) %>%
+    data_info1 <- fixData(olympics_df, input) %>%
+      slice(1)
+    data_info2 <- fixData2(olympics_df, input) %>%
     slice(1)
-    paste0("According to the data for the ", input$game," Olympic games, female athletes won ", data_info$num_f, " ",
-           " medals, whereas male athletes won ", data_info$num_m, " medals overall. ",
-           input$group, " has a gender distribution of medals consisting of ", data_info$percent_f, 
-           "% females and ", data_info$percent_m, "% males.",
+    paste0("According to the data for the ", input$game," Olympic games, female athletes won ", data_info1$num_f, " ",
+           " medals, whereas male athletes won ", data_info1$num_m, " medals overall. ",
+           input$group, " has a gender distribution of medals consisting of ", data_info2$percent_f, 
+           "% females and ", data_info2$percent_m, "% males.",
            " From this data it can be inferred that there are more male events than female events",
            " in the Olympics, but that the amount of female events has been increasing since the Summer 1900 games.",
            "It's also interesting to observe the differences in gender distribution of Olympic medals between ",
